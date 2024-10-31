@@ -7,6 +7,7 @@ jest.mock("../store/store", () => ({
   itemStore: {
     loadItems: jest.fn(),
     items: [],
+    isLoading: true,
   },
 }));
 
@@ -46,6 +47,12 @@ describe("Main Component", () => {
   test("renders LoadingIndicator when no items are present", () => {
     itemStore.items = [];
 
+    render(<Main />);
+
+    expect(screen.getByTestId("loading-indicator")).toBeInTheDocument();
+  });
+
+  test("renders LoadingIndicator when items are being loaded", () => {
     render(<Main />);
 
     expect(screen.getByTestId("loading-indicator")).toBeInTheDocument();

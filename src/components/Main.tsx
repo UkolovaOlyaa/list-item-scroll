@@ -9,6 +9,17 @@ import { LoadingIndicator } from "./LoadingIndicator";
 export const Main: React.FC = observer(() => {
   useEffect(() => {
     itemStore.loadItems();
+    const handleScroll = () => {
+      if (
+        !itemStore.isLoading &&
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200
+      ) {
+        itemStore.loadMore(itemStore.page + 1);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleSortOrderChange = (value: string) => {
@@ -29,8 +40,9 @@ export const Main: React.FC = observer(() => {
               <Select.Option value="desc">Descending</Select.Option>
             </Select>
           </Flex>
-          <ItemList />
           <PaginationComponent />
+          <ItemList />
+          {itemStore.isLoading && <LoadingIndicator />}
         </>
       ) : (
         <LoadingIndicator />

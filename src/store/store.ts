@@ -10,13 +10,19 @@ class ItemStore {
   page: number = 1;
   editingItem: number | null = null;
   temporaryName: string = "";
-  pageSize: number = 80;
+  pageSize: number = 50;
 
   sortField: string = "name";
   sortOrder: string = "";
+  isLoading: boolean = false;
+  isPaginationFixed: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setPaginationFixed(value: boolean) {
+    this.isPaginationFixed = value;
   }
 
   setSortOrder(order: string) {
@@ -40,15 +46,20 @@ class ItemStore {
   }
 
   async loadItems() {
+    if (this.isLoading) return;
+    this.isLoading = true;
     try {
       const response = await fetch(
-        `https://api.github.com/search/repositories?q=javascript&sort=stars&order=asc&page=${this.page}&per_page=${this.pageSize}`
+        `https://api.github.com/search/repositories?q=javascript&sort=stars&order=${this.sortOrder}&page=${this.page}&per_page=${this.pageSize}`
       );
+
       const data = await response.json();
       this.items.push(...data.items);
       this.totalCount = data.total_count;
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      this.isLoading = false;
     }
   }
 
