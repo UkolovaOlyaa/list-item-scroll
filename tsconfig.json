@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "target": "es5",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "CommonJS",
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+
+    "paths": {
+      "store/*": ["store/*"]
+    }
+  },
+  "include": ["src"]
+}
